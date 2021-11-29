@@ -13,16 +13,13 @@ function handleFunction (tree, ctx) {
 
   switch (funcName) {
     case 'str_sub':
-
       if (params.length < 3) {
         params.push('NULL')
       }
 
       return 'mb_substr' + '(' + params.join(', ') + ', \'UTF-8\')'
-
     case 'str_len':
       return 'mb_strlen(' + params.join(', ') + ', \'UTF-8\')'
-
     case 'str_replace':
       return 'str_replace(' + params[1] + ', ' + params[2] + ', ' + params[0] + ')'
     case 'str_pad_right':
@@ -63,7 +60,6 @@ function handleFunction (tree, ctx) {
       }
 
       return 'toFixed(' + params.join(', ') + ')'
-
     case 'arr_keys':
       return 'array_keys(' + params.join(', ') + ')'
     case 'arr_contain':
@@ -115,6 +111,12 @@ function handleFunction (tree, ctx) {
       return 'sqrt(' + params.join(', ') + ')'
     case 'num_rand':
       return '((float)rand()/(float)getrandmax())'
+
+    case 'json_encode':
+      return 'json_encode(' + params[0] + ', JSON_UNESCAPED_UNICODE)'
+    case 'json_decode':
+      return 'json_decode(' + params[0] + ', true)'
+
     default:
       return funcName + '(' + params.join(', ') + ')'
   }

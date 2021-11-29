@@ -77,7 +77,7 @@ function attrValueHandle (attr, id, filepath, ctx) {
     name = handleNode(attr.name, id, filepath, ctx)
     value = attr.value === null ? 'false' : handleNode(attr.value, id, filepath, ctx)
 
-    return '<?php $attrs' + id + '[' + name + '] = ' + value + ';?>'
+    return '<?php $attrs' + id + '[' + name + '] = ' + value + '; if (gettype($attrs' + id + '[' + name + ']) === "string") $attrs' + id + '[' + name + '] = htmlspecialchars($attrs' + id + '[' + name + ']);?>'
   }
 
   return '<?php $attrs' + id + '[\'' + handleNode(attr.value, id, filepath, ctx) + '\'] = false;?>'
