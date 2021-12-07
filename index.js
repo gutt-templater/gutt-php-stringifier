@@ -16,7 +16,8 @@ var reservedTags = [
   'apply-switch',
   'apply-case',
   'apply-default',
-  'use-state'
+  'use-state',
+  'state-provider'
 ]
 var pairedTags = [
   'if',
@@ -585,6 +586,20 @@ function handleUseStateStatement(node, id, filepath, ctx) {
     (typeof params.value !== 'undefined' ? handleNode(params.value, node.id, filepath, ctx) : 'null') + '; ?>';
 }
 
+function handleStateProvider(node, id, filepath, ctx) {
+  var params = extractValuesFromAttrs(node.attrs, ['path'])
+  var path = 'window.state'
+
+  if (params.path) {
+    path = params.path.value
+  }
+
+  return '<?php $children' + id + '[] = ["script" => ' +
+    '["attrs" => ["type" => "text/javascript"], ' +
+    '"body" => "' + path + ' = " . json_encode($__state, JSON_UNESCAPED_UNICODE)' +
+    ']];?>';
+}
+
 function handleInlineSvg (node, id, filepath, ctx) {
   var params = extractValuesFromAttrs(node.attrs, ['src'])
   var svg = parser.parseFile(path.resolve(path.dirname(filepath), params.src.value))
@@ -647,6 +662,9 @@ function handleTag (node, id, filepath, ctx) {
 
     case 'use-state':
       return handleUseStateStatement(node, id, filepath, ctx)
+
+    case 'state-provider':
+      return handleStateProvider(node, id, filepath, ctx)
 
     default:
       if (~importedComponents.indexOf(node.name)) {
