@@ -607,6 +607,16 @@ function handleInlineSvg (node, id, filepath, ctx) {
   return handleTemplate(svg.result, id, filepath, ctx)
 }
 
+function handleSlotStatement(node, id, filepath, ctx) {
+  var children = node.firstChild ? handleTemplate(node.firstChild, id, filepath, ctx) : ''
+
+  return '<?php if (count($__children)) { ?>\n' +
+    '<?php $children' + id + ' = $__children; ?>\n' +
+    '<?php } else { ?>\n' +
+    children +
+    '<?php } ?>\n'
+}
+
 function handleTag (node, id, filepath, ctx) {
   switch (node.name) {
     case 'inline-svg':
@@ -665,6 +675,9 @@ function handleTag (node, id, filepath, ctx) {
 
     case 'state-provider':
       return handleStateProvider(node, id, filepath, ctx)
+
+    case 'slot':
+      return handleSlotStatement(node, id, filepath, ctx)
 
     default:
       if (~importedComponents.indexOf(node.name)) {
