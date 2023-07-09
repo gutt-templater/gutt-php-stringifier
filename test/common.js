@@ -831,4 +831,29 @@ describe ('PHP stringifier', function () {
         '<div><div>1</div><div>2</div><div><div>21</div><div>22</div><div><div>221</div></div></div><div>3</div></div>'
       )
   })
+
+  it ('boolean param', function () {
+    var tempWrapName = generateName()
+    var wrapTemplate =
+      '<param name={$disabled} value={false} /><if test={$disabled}><input type="text" disabled={$disabled} /></if>'
+    var template =
+      '<import name="sub-component" from="./' + tempWrapName + '" /><sub-component disabled />'
+
+    return parseAndWriteFile(wrapTemplate, tempWrapName + '.php')
+      .then(function () {
+        return parse(template, {data: [
+          {value: 1},
+          {value: 2, children: [
+            {value: 21},
+            {value: 22, children: [
+              {value: 221}
+            ]}
+          ]},
+          {value: 3}
+        ]})
+      })
+      .should.eventually.equal(
+        '<input type="text" disabled />'
+      )
+  })
 })

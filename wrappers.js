@@ -141,7 +141,7 @@ module.exports = {
     '      } elseif (isset($element[\'script\'])) {\n' +
     '        $attrs = \'\';\n' +
     '        foreach ($element[\'script\'][\'attrs\'] as $key => $value) {\n' +
-    '          if (in_array($key, $logicAttrs)) {\n' +
+    '          if (in_array($key, $logicAttrs) || $value === true) {\n' +
     '            if ($value !== false) $attrs .= " " . $key;\n' +
     '          } else {\n' +
     '            $attrs .= " " . $key . ($value !== false && $value !== null ? "=\\"" . $value . "\\"" : "");\n' +
@@ -153,7 +153,7 @@ module.exports = {
     '      } elseif (isset($element[\'tag\'])) {\n' +
     '        $attrs = \'\';\n' +
     '        foreach ($element[\'attrs\'] as $key => $value) {\n' +
-    '          if (in_array($key, $logicAttrs)) {\n' +
+    '          if (in_array($key, $logicAttrs) || $value === true) {\n' +
     '            if ($value !== false) $attrs .= " " . $key;\n' +
     '          } else {\n' +
     '            $attrs .= " " . $key . ($value !== false && $value !== null ? "=\\"" . $value . "\\"" : "");\n' +
