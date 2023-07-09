@@ -166,7 +166,7 @@ module.exports = {
     '    return implode(\'\', $result);\n' +
     '  }\n'+
     '}\n' +
-    'return function ($__data = [], $__children = false, $returnAsElements = false, $__state = null) {\n' +
+    '$__template = function ($__data = [], $__children = false, $returnAsElements = false, $__state = null) use (&$__template) {\n' +
     '  $__components = [];\n' +
     '  $__stack = [];\n' +
     '  if (is_null($__state)) $__state = $__data;\n' +
@@ -179,5 +179,6 @@ module.exports = {
     '// <<< GENERATED CODE\n' +
     '   ob_end_clean();\n' +
     '  return $returnAsElements !== false ? $children0 : generateHtml($children0);\n' +
-    '};'
+    '};\n' +
+    'return $__template;'
 }

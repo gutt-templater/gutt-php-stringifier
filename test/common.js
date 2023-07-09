@@ -806,4 +806,29 @@ describe ('PHP stringifier', function () {
         '<article><aside><h2>alternate</h2></aside></article>'
       )
   })
+
+  it ('self statement', function () {
+    var tempWrapName = generateName()
+    var wrapTemplate =
+      '<param name={$data} value={[]} /><div><for-each item={$item} from={$data}><div>{$item.value}</div><if test={$item.children?}><self data={$item.children} /></if></for-each></div>'
+    var template =
+      '<import name="self-component" from="./' + tempWrapName + '" /><use-state name={$data} value={[]} /><self-component data={$data} />'
+
+    return parseAndWriteFile(wrapTemplate, tempWrapName + '.php')
+      .then(function () {
+        return parse(template, {data: [
+          {value: 1},
+          {value: 2, children: [
+            {value: 21},
+            {value: 22, children: [
+              {value: 221}
+            ]}
+          ]},
+          {value: 3}
+        ]})
+      })
+      .should.eventually.equal(
+        '<div><div>1</div><div>2</div><div><div>21</div><div>22</div><div><div>221</div></div></div><div>3</div></div>'
+      )
+  })
 })

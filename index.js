@@ -617,6 +617,37 @@ function handleSlotStatement(node, id, filepath, ctx) {
     '<?php } ?>\n'
 }
 
+function handleSelfStatement(node, id, filepath, ctx) {
+  var children = '<?php $children' + node.id + ' = [];?>'
+  var attrs
+  var fragment = new Tag('fragment')
+  var attrsOutput = '$attrs' + fragment.id
+  var copyResultChilds =
+    '<?php foreach($result' + node.id + ' as $item' + node.id + ') {\n' +
+    '$children' + id + '[] = $item' + node.id + ';\n' +
+    '} ?>'
+
+  linkNodeWithAttrFragment(node, fragment)
+
+  if (!node.isSingle && node.firstChild) {
+    children += handleTemplate(node.firstChild, node.id, filepath, ctx)
+  }
+
+  attrs = attrsHandler(fragment, node.attrs, filepath, ctx)
+
+  if (node.isSingle || ~singleTags.indexOf(node.name)) {
+    return (
+      attrs + '<?php $result' + node.id + ' = $__template' +
+      '(' + attrsOutput + ', [], true, $__state); ?>' + copyResultChilds
+    )
+  }
+
+  return (
+    attrs + children + '<?php $result' + node.id + ' = $__template' +
+    '(' + attrsOutput + ', $children' + node.id + ', true, $__state); ?>' + copyResultChilds
+  )
+}
+
 function handleTag (node, id, filepath, ctx) {
   switch (node.name) {
     case 'inline-svg':
@@ -678,6 +709,9 @@ function handleTag (node, id, filepath, ctx) {
 
     case 'slot':
       return handleSlotStatement(node, id, filepath, ctx)
+
+    case 'self':
+      return handleSelfStatement(node, id, filepath, ctx)
 
     default:
       if (~importedComponents.indexOf(node.name)) {
