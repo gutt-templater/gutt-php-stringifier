@@ -29,8 +29,7 @@ var pairedTags = [
 var singleTags = ['input']
 var mapAttrFragments = {}
 var mapCurrentFragmentNode = {}
-var prefix = require('./wrappers').prefix
-var postfix = require('./wrappers').postfix
+var getWrapper = require('./wrappers')
 var importedComponents = []
 var ParseError = require('gutt/helpers/parse-error')
 var switchMarker = {}
@@ -637,7 +636,7 @@ function handleSelfStatement(node, id, filepath, ctx) {
 
   if (node.isSingle || ~singleTags.indexOf(node.name)) {
     return (
-      attrs + '<?php $result' + node.id + ' = $__template' +
+      attrs + '<?php $result' + node.id + ' = $__template' + ctx.id +
       '(' + attrsOutput + ', [], true, $__state); ?>' + copyResultChilds
     )
   }
@@ -797,9 +796,12 @@ function handleTemplate (node, id, filepath, ctx) {
 }
 
 module.exports = function (template, source, filepath) {
+  var id = Math.ceil(Math.random() * 100000)
   var templateResult = handleTemplate(template, 0, filepath, {
-    stack: []
+    stack: [],
+    id: id
   })
+  var wrapper = getWrapper(id)
 
-  return prefix + templateResult + postfix
+  return wrapper.prefix + templateResult + wrapper.postfix
 }

@@ -1,5 +1,6 @@
-module.exports = {
-  prefix:
+module.exports = function (id) {
+  return {
+    prefix:
     '<?php\n' +
     'if (!defined(\'MKARR_OPEN\')) {\n' +
     '  define(\'MKARR_OPEN\', 2 << 1);\n' +
@@ -166,7 +167,7 @@ module.exports = {
     '    return implode(\'\', $result);\n' +
     '  }\n'+
     '}\n' +
-    '$__template = function ($__data = [], $__children = false, $returnAsElements = false, $__state = null) use (&$__template) {\n' +
+    '$__template' + id + ' = function ($__data = [], $__children = false, $returnAsElements = false, $__state = null) use (&$__template' + id + ') {\n' +
     '  $__components = [];\n' +
     '  $__stack = [];\n' +
     '  if (is_null($__state)) $__state = $__data;\n' +
@@ -180,5 +181,6 @@ module.exports = {
     '   ob_end_clean();\n' +
     '  return $returnAsElements !== false ? $children0 : generateHtml($children0);\n' +
     '};\n' +
-    'return $__template;'
+    'return $__template' + id + ';'
+  }
 }
