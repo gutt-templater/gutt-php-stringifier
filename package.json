@@ -3,7 +3,7 @@
   "title": "Gutt php stringifier",
   "CLISupport": true,
   "ext": "php",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "description": "",
   "main": "index.js",
   "scripts": {

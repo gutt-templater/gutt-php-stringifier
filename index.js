@@ -80,7 +80,7 @@ function attrValueHandle (attr, id, filepath, ctx) {
     return '<?php $attrs' + id + '[' + name + '] = ' + value + '; if (gettype($attrs' + id + '[' + name + ']) === "string") $attrs' + id + '[' + name + '] = htmlspecialchars($attrs' + id + '[' + name + ']);?>'
   }
 
-  return '<?php $attrs' + id + '[\'' + handleNode(attr.value, id, filepath, ctx) + '\'] = false;?>'
+  return '<?php $attrs' + id + '[\'' + handleNode(attr.value, id, filepath, ctx) + '\'] = true;?>'
 }
 
 function attrsHandler (fragment, attrs, filepath, ctx) {

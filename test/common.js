@@ -661,9 +661,9 @@ describe ('PHP stringifier', function () {
   })
 
   it ('script tag', function () {
-    var template = 'text<script deffer src={$src}>console.log("src")</script>after'
+    var template = 'text<script defer src={$src}>console.log("src")</script>after'
 
-    return parse(template, { src: 'path.js' }).should.eventually.equal('text<script deffer src="path.js">console.log("src")</script>after')
+    return parse(template, { src: 'path.js' }).should.eventually.equal('text<script defer src="path.js">console.log("src")</script>after')
   })
 
   it ('classes helper, normal', function () {
@@ -854,6 +854,15 @@ describe ('PHP stringifier', function () {
       })
       .should.eventually.equal(
         '<input type="text" disabled />'
+      )
+  })
+
+  it ('boolean attributes', function () {
+    return parse(
+        '<param name={$param} value="" /><param name={$negative-param} value={false} /><param name={$positive-param} value={true} /><div data-string="" data-positive={true} data-negative={false} data-zero={0} data-param={$param} selected={true} checked={false} data-negative-param={$negative-param} data-positive-param={$positive-param} />'
+      )
+      .should.eventually.equal(
+        '<div data-string="" data-positive data-zero="0" data-param="" selected data-positive-param />'
       )
   })
 })

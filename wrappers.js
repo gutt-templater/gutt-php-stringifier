@@ -135,18 +135,16 @@ module.exports = function (id) {
     'if (!function_exists(\'generateHtml\')) {\n' +
     '  function generateHtml($elements) {\n'+
     '    $result = [];\n' +
-    '    $logicAttrs = [\'readonly\', \'selected\', \'checked\', \'disabled\', \'autofocus\', \'required\', \'multiple\', \'autoplay\', \'controls\', \'loop\', \'muted\'];\n' +
+    '    $logicAttrs = [\'defer\', \'async\', \'readonly\', \'selected\', \'checked\', \'disabled\', \'autofocus\', \'required\', \'multiple\', \'autoplay\', \'controls\', \'loop\', \'muted\'];\n' +
     '    foreach ($elements as $element) {\n' +
     '      if (isset($element[\'comment\'])) {\n' +
     '        $result[] = \'<!--\' . $element[\'comment\'] . \'-->\';\n' +
     '      } elseif (isset($element[\'script\'])) {\n' +
     '        $attrs = \'\';\n' +
     '        foreach ($element[\'script\'][\'attrs\'] as $key => $value) {\n' +
-    '          if (in_array($key, $logicAttrs) || $value === true) {\n' +
-    '            if ($value !== false) $attrs .= " " . $key;\n' +
-    '          } else {\n' +
-    '            $attrs .= " " . $key . ($value !== false && $value !== null ? "=\\"" . $value . "\\"" : "");\n' +
-    '          }\n' +
+    '          if ($value !== false && $value !== null) {\n' +
+    '            $attrs .= " " . $key . (!in_array($key, $logicAttrs) ? "=\\"" . $value . "\\"" : "");\n' +
+    '          }' +
     '        }\n' +
     '        $result[] = \'<script\' . $attrs . \'>\' . $element[\'script\'][\'body\'] . \'</script>\';\n' +
     '      } elseif (isset($element[\'text\'])) {\n' +
@@ -154,11 +152,9 @@ module.exports = function (id) {
     '      } elseif (isset($element[\'tag\'])) {\n' +
     '        $attrs = \'\';\n' +
     '        foreach ($element[\'attrs\'] as $key => $value) {\n' +
-    '          if (in_array($key, $logicAttrs) || $value === true) {\n' +
-    '            if ($value !== false) $attrs .= " " . $key;\n' +
-    '          } else {\n' +
-    '            $attrs .= " " . $key . ($value !== false && $value !== null ? "=\\"" . $value . "\\"" : "");\n' +
-    '          }\n' +
+    '          if ($value !== false && $value !== null) {\n' +
+    '            $attrs .= " " . $key . (!in_array($key, $logicAttrs) && $value !== true ? "=\\"" . $value . "\\"" : "");\n' +
+    '          }' +
     '        }\n' +
     '        $result[] = \'<\' . $element[\'tag\'] . $attrs .\n' +
     '        (isset($element[\'children\']) ? \'>\' . generateHtml($element[\'children\']) . \'</\' . $element[\'tag\'] . \'>\' : ($element[\'tag\'] === \'!DOCTYPE\' ? \'\' : \' /\') . \'>\');\n' +
