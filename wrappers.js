@@ -147,6 +147,14 @@ module.exports = function (id) {
     '          }' +
     '        }\n' +
     '        $result[] = \'<script\' . $attrs . \'>\' . $element[\'script\'][\'body\'] . \'</script>\';\n' +
+    '      } elseif (isset($element[\'style\'])) {\n' +
+    '        $attrs = \'\';\n' +
+    '        foreach ($element[\'style\'][\'attrs\'] as $key => $value) {\n' +
+    '          if ($value !== false && $value !== null) {\n' +
+    '            $attrs .= " " . $key . (!in_array($key, $logicAttrs) ? "=\\"" . $value . "\\"" : "");\n' +
+    '          }' +
+    '        }\n' +
+    '        $result[] = \'<style\' . $attrs . \'>\' . $element[\'style\'][\'body\'] . \'</style>\';\n' +
     '      } elseif (isset($element[\'text\'])) {\n' +
     '        $result[] = $element[\'text\'];\n' +
     '      } elseif (isset($element[\'tag\'])) {\n' +

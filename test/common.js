@@ -666,6 +666,12 @@ describe ('PHP stringifier', function () {
     return parse(template, { src: 'path.js' }).should.eventually.equal('text<script defer src="path.js">console.log("src")</script>after')
   })
 
+  it ('style tag', function () {
+    var template = 'text<style lang="postcss">html, body {margin:0;padding;0}</style>after'
+
+    return parse(template, {}).should.eventually.equal('text<style lang="postcss">html, body {margin:0;padding;0}</style>after')
+  })
+
   it ('classes helper, normal', function () {
     var template = '<div class={classes("block", "element")}></div>'
 

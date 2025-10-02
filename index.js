@@ -738,6 +738,23 @@ function scriptNode(node, id, filepath, ctx) {
   )
 }
 
+function styleNode(node, id, filepath, ctx) {
+  var attrs = []
+
+  node.attrs.forEach(function (attr) {
+    attrs.push(attrValueHandle(attr, node.id, filepath, ctx))
+  })
+
+  return (
+    '<?php $attrs' + node.id + ' = [];?>' +
+    attrs.join('') +
+    '<?php $children' + id + '[] = ["style" => ' +
+    '["attrs" => $attrs' + node.id + ', ' +
+    '"body" => "' + escapeQuote(node.body.str) + '"' +
+    ']];?>'
+  )
+}
+
 function handleNode (node, id, filepath, ctx, isToWrite) {
   switch (node.type) {
     case 'tag':
@@ -752,6 +769,8 @@ function handleNode (node, id, filepath, ctx, isToWrite) {
       return logicHandler(node, ctx, isToWrite)
     case 'logic-node':
       return logicNodeHandler(node, id, filepath, ctx)
+    case 'style':
+      return styleNode(node, id, filepath, ctx)
     case 'script':
       return scriptNode(node, id, filepath, ctx)
   }
